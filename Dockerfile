@@ -1,30 +1,37 @@
-# Dockerfile for Fly.io (using requirements.txt)
-FROM python:3.10-slim
+FROM python:3.13-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Set work directory
 WORKDIR /app
 
-# Install system dependencies
+# Install system-level packages
 RUN apt-get update && apt-get install -y \
     build-essential \
+    nodejs \
+    npm \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt gunicorn
+COPY pyproject.toml uv.lock ./
+RUN pip install --upgrade pip && pip install uv
+RUN uv sync --no-dev
+
+# Install Node dependencies
+COPY package.json package-lock.json ./
+RUN npm ci
 
 # Copy project files
 COPY . .
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+# Build assets and collect static files
+RUN npm run minify && python manage.py collectstatic --noinput
 
 # Expose port
 EXPOSE 8000
 
-# Run Gunicorn (Fly.io uses WSGI by default)
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "_core.wsgi:application"]
+# Run database migrations and start Daphne
+CMD sh -c "python manage.py migrate && daphne -b 0.0.0.0 -p $PORT _core.asgi:application"
