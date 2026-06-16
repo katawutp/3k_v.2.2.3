@@ -1,5 +1,5 @@
 # fly.toml file for your Django app
-app = "KokKokKok - v.2.2.3"
+app = "3k-v223"
 
 [build]
   dockerfile = "Dockerfile"
