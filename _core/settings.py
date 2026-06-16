@@ -128,10 +128,11 @@ else:
         }
     }
 
-# Database
-if ENVIRONMENT == 'production' or POSTGRES_LOCALLY:
+# Database - Always use DATABASE_URL from environment if available
+DATABASE_URL = env('DATABASE_URL', default='sqlite:///db.sqlite3')
+if DATABASE_URL.startswith('postgresql://') or DATABASE_URL.startswith('postgres://'):
     DATABASES = {
-        'default': dj_database_url.parse(env("DATABASE_URL", default="sqlite:///db.sqlite3"))
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
     }
 else:
     DATABASES = {
