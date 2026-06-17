@@ -4,12 +4,12 @@
 {% block meta_tag %}
 <meta property="og:title" content="โพสต์โดยผู้ใช้งานแอ๊พก๊อกๆๆ : {{ post.author.username }}">
 <meta prpperty="og:desctription" content="Check out this posts!">
-<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}">
+{% if post.image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}">{% else %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}/static/images/default-og-image.jpg">{% endif %}
 <meta property="og:type" content="article">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="โพสต์โดยผู้ใช้งานแอ๊พก๊อกๆๆ : {{ post.author.username }}">
 <meta name="twitter:desctription" content="Check out post!">
-<meta name="image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}">
+{% if post.image %}<meta name="image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}">{% else %}<meta name="image" content="{{ request.scheme }}://{{ request.get_host }}/static/images/default-og-image.jpg">{% endif %}
 {% endblock %}
 
 {% block content %}
