@@ -26,4 +26,4 @@ RUN npm run minify && python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Use Gunicorn instead of Daphne for better stability
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "_core.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--timeout", "120", "--workers", "2", "_core.wsgi:application"]
