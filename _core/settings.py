@@ -205,6 +205,9 @@ LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 ACCOUNT_FORMS = {'signup': 'a_users.forms.CustomSignupForm'}
 
+# Account settings - allow GET for logout
+ACCOUNT_LOGOUT_ON_GET = True
+
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = False
 SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
